@@ -2,21 +2,35 @@ package ta.te.ti;
 
 public class TaTeTi {
     
+    static int contador = 0;
+    
     public static void main(String[] args) {
         Tablero t = new Tablero();
-        int cont = 1;
+        test(t, obtenerLaOtraMarca(' '));
+    }
+
+    public static void test(Tablero t, char c) {
+        if (t.estaLleno()) {
+            System.out.println(++contador + " -> " + t.toString(0));
+            return;
+        }
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                t.set(i, j, String.valueOf(cont++).charAt(0));
+                if (t.esVacia(i, j)) {
+                    t.set(i, j, c);
+                    test(t, obtenerLaOtraMarca(c));
+                    t.set(i, j, ' ');
+
+                }
             }
         }
-        System.out.println(t.toString(0));
-        System.out.println();
-        System.out.println(t.toString(1));
-        System.out.println();
-        System.out.println(t.toString(2));
-        System.out.println();
-        
     }
-    
+
+    private static char obtenerLaOtraMarca(char c) {
+        if (c == 'X') {
+            return 'O';
+        }
+        return 'X';
+    }
+
 }

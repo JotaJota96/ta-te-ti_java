@@ -7,8 +7,13 @@ public class Tablero {
 
     public Tablero() {
         tablero = new char[TAMANIO][TAMANIO];
+        for (int i = 0; i < TAMANIO; i++) {
+            for (int j = 0; j < TAMANIO; j++) {
+                this.tablero[i][j] = ' ';
+            }
+        }
     }
-
+    
     public char[][] getTablero() {
         char tab[][] = new char[TAMANIO][TAMANIO];
         for (int i = 0; i < TAMANIO; i++) {
@@ -21,11 +26,26 @@ public class Tablero {
 
     public void set(int x, int y, char c) {
         if (x < 0 || TAMANIO <= x || y < 0 || TAMANIO <= y) {
-            throw new RuntimeException("Coordenada [x,y] = [,] fuera de rango");
+            throw new RuntimeException("Coordenada [x,y] = ["+ x +"," + y + "] fuera de rango");
         }
         tablero[x][y] = c;
     }
-
+    
+    public boolean esVacia(int x, int y){
+        return this.tablero[x][y] == ' ';
+    }
+    
+    public boolean estaLleno(){
+        for (int i = 0; i < TAMANIO; i++) {
+            for (int j = 0; j < TAMANIO; j++) {
+                if (esVacia(i, j)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     @Override
     public String toString() {
         String ret = "{";
