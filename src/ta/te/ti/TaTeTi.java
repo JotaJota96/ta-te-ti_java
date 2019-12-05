@@ -2,35 +2,71 @@ package ta.te.ti;
 
 public class TaTeTi {
     
-    static int contador = 0;
-    
     public static void main(String[] args) {
-        Tablero t = new Tablero();
-        test(t, obtenerLaOtraMarca(' '));
+        //JugadorVirtual jv = new JugadorVirtual(Marca.X);
+        jugarPartidaContraPC();
     }
-
-    public static void test(Tablero t, char c) {
-        if (t.estaLleno()) {
-            System.out.println(++contador + " -> " + t.toString(0));
-            return;
-        }
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (t.esVacia(i, j)) {
-                    t.set(i, j, c);
-                    test(t, obtenerLaOtraMarca(c));
-                    t.set(i, j, ' ');
-
-                }
+    
+    public static void jugarPartida(){
+        Tablero t = new Tablero();
+        Marca m = Marca.X;
+        
+        while (!t.estaLleno() && t.getGanador() == Marca.VACIO) {
+            System.out.println("Turno de " + m);
+            System.out.println(t.toString(1));
+            String s = new java.util.Scanner(System.in).nextLine();
+            try {
+                int x = Integer.valueOf("" + s.charAt(0));
+                int y = Integer.valueOf("" + s.charAt(1));
+                t.set(x, y, m);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                continue;
             }
         }
+        System.out.println(t.toString(1));
+        System.out.println("Ha ganado " + t.getGanador());
     }
-
-    private static char obtenerLaOtraMarca(char c) {
-        if (c == 'X') {
-            return 'O';
+    
+    public static void jugarPartidaContraPC(){
+        Tablero t = new Tablero();
+        Marca m = Marca.X;
+        Marca miMarca = m;
+        JugadorVirtual jv = new JugadorVirtual(m.getOpuesta(), false);
+        
+        while (!t.estaLleno() && t.getGanador() == Marca.VACIO) {
+            System.out.println("Turno de " + m);
+            System.out.println(t.toString(1));
+            
+            if (m == Marca.X) {
+                System.out.print("Ingrese coordenada: ");
+                String s = new java.util.Scanner(System.in).nextLine();
+                if (s.equalsIgnoreCase("salir")){
+                    break;
+                }
+                try {
+                    int x = Integer.valueOf("" + s.charAt(0));
+                    int y = Integer.valueOf("" + s.charAt(1));
+                    t.set(x, y, m);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    continue;
+                }
+            } else {
+                System.out.println("Decidiendo jugada...");
+                jv.jugarTurno(t);
+            }
+            m = m.getOpuesta();
         }
-        return 'X';
+        System.out.println(t.toString(1));
+        if (t.getGanador() == miMarca){
+            System.out.println("Has ganado");
+        }else if (t.getGanador() != Marca.VACIO){
+            System.out.println("Has perdido");
+        }else{
+            System.out.println("Empate");
+        }
     }
-
+    
+    
 }
