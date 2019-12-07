@@ -42,7 +42,7 @@ public class JugadorVirtual {
             throw new RuntimeException("El jugador virtual no puede hacer su jugada porque el tablero está lleno o ya hay un ganador");
         }
         Map<String, Integer> posibilidades = new TreeMap();
-        ArrayList<Integer> remover = new ArrayList();
+        //ArrayList<Integer> remover = new ArrayList();
         int idRemover = 0;
         for (Tablero t : tableros){
             boolean descartar = !empiezanIgual(tablero.getSecuencia(), t.getSecuencia());
@@ -52,6 +52,13 @@ public class JugadorVirtual {
                 try {
                     String prox = t.getSecuencia().get(tablero.getSecuencia().size());
                     Marca tGanador = t.getGanador();
+                    
+                    if (tablero.getSecuencia().size()+2 == t.getSecuencia().size() && tGanador == marca.getOpuesta()){
+                        posibilidades.clear();
+                        posibilidades.put(t.getSecuencia(t.getSecuencia().size()), 0);
+                        break;
+                    }
+                    
                     int pesoDesicion = 0;
                     
                     if (posibilidades.containsKey(prox)) {
@@ -96,11 +103,13 @@ public class JugadorVirtual {
         
         
         for (Map.Entry<String, Integer> entry : new TreeMap<>(posibilidades).entrySet()) {
+            //System.out.println(entry.getKey() + ": " + entry.getValue());
             if (entry.getValue() < max) {
                 posibilidades.remove(entry.getKey());
             }
         }
-
+        //System.out.println("----------");
+        
         int random = (int) (Math.random() * posibilidades.size());
         String jugada = "??";
         for (Map.Entry<String, Integer> entry : posibilidades.entrySet()) {
