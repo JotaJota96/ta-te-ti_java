@@ -101,6 +101,9 @@ public class Tablero {
     }
     
     public boolean marcaGano(Marca m){
+        if (m == Marca.VACIO){
+            return !(marcaGano(Marca.X) || marcaGano(Marca.O));
+        }
         boolean hayCoincidencia;
         // verifica filas
         for (int i = 0; i < TAMANIO; i++) {

@@ -37,7 +37,10 @@ public class JugadorVirtual {
         }
     }
     
-    public void jugarTurno(Tablero tablero){
+    public String jugarTurno(Tablero tablero){
+        if (tablero.estaLleno() || !tablero.marcaGano(Marca.VACIO)){
+            throw new RuntimeException("El jugador virtual no puede hacer su jugada porque el tablero está lleno o ya hay un ganador");
+        }
         Map<String, Integer> posibilidades = new TreeMap();
         ArrayList<Integer> remover = new ArrayList();
         int idRemover = 0;
@@ -110,6 +113,7 @@ public class JugadorVirtual {
         int x = Integer.valueOf("" + jugada.charAt(0));
         int y = Integer.valueOf("" + jugada.charAt(1));
         tablero.set(x, y, marca);
+        return jugada;
     }
     
     private boolean empiezanIgual(List<String> a1, List<String> a2){
