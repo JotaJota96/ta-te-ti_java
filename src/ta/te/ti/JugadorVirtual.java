@@ -44,38 +44,68 @@ public class JugadorVirtual {
         for (Tablero t : tableros){
             boolean descartar = !empiezanIgual(tablero.getSecuencia(), t.getSecuencia());
             if (descartar){
-                remover.add(idRemover);
+                //remover.add(idRemover);
             }else{
                 try {
                     String prox = t.getSecuencia().get(tablero.getSecuencia().size());
-                    if (t.getGanador() != marca.getOpuesta()) {
-                        if (posibilidades.containsKey(prox)) {
-                            int nuevoValor = posibilidades.get(prox) + 1;
-                            posibilidades.replace(prox, nuevoValor);
-                        } else {
-                            posibilidades.put(prox, 1);
-                        }
+                    Marca tGanador = t.getGanador();
+                    int pesoDesicion = 0;
+                    
+                    if (posibilidades.containsKey(prox)) {
+                        pesoDesicion = posibilidades.get(prox);
+                    } else {
+                        pesoDesicion = 0;
                     }
+                    
+                    if (tGanador == marca) {
+                        // Si el ganador soy yo
+                        pesoDesicion += 2;
+                    } else if (tGanador == Marca.VACIO) {
+                        // si empataramos
+                        pesoDesicion += 1;
+                    } else {
+                        // si pierdo
+                        pesoDesicion -= 1;
+                    }
+                    
+                    posibilidades.put(prox, pesoDesicion);
+                    
                 } catch (Exception e) {
                 }
             }
             idRemover++;
         }
         /*
+        // el siguiente for deberia liberar memoria que no se va a usar mas,
+        // pero sale mas a cuenta desperdiciarla que liberarla porque demora mucho en hacerlo
+        // si se quiere utilizar, descomentar la linea "remover.add(idRemover);" 
         for (int i = remover.size()-1; i >= 0; i--){
             int borrar = remover.get(i);
             tableros.remove(borrar);
         }
         */
-        int max = 0;
+        int max = Integer.MIN_VALUE;
+        for (Map.Entry<String, Integer> entry : posibilidades.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+            }
+        }
+        
+        
+        for (Map.Entry<String, Integer> entry : new TreeMap<>(posibilidades).entrySet()) {
+            if (entry.getValue() < max) {
+                posibilidades.remove(entry.getKey());
+            }
+        }
+
+        int random = (int) (Math.random() * posibilidades.size());
         String jugada = "??";
         for (Map.Entry<String, Integer> entry : posibilidades.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue();
-            if (value > max){
-                jugada = key;
-                max = value;
+            if (random == 0) {
+                jugada = entry.getKey();
+                break;
             }
+            random--;
         }
         int x = Integer.valueOf("" + jugada.charAt(0));
         int y = Integer.valueOf("" + jugada.charAt(1));

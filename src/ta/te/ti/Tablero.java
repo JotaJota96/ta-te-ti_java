@@ -192,7 +192,10 @@ public class Tablero {
                         ret += "| " + this.tablero[i][j].getMarca() + " ";
                     }
                     ret += "|\n";
-                    ret += lineaHorizontal() + "\n";
+                    ret += lineaHorizontal();
+                    if (i+1 < TAMANIO){
+                        ret += "\n";
+                    }
                 }
                 break;
             case 2:
