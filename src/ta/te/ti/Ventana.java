@@ -2,6 +2,7 @@ package ta.te.ti;
 
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 public class Ventana extends javax.swing.JFrame {
     
@@ -41,7 +42,7 @@ public class Ventana extends javax.swing.JFrame {
     
     private void botonesClick(java.awt.event.MouseEvent evt) {
         JButton btn = ((JButton) evt.getSource());
-        if (!btn.isEnabled() || gameOver()) {
+        if (!btn.isEnabled() || partidaTerminada()) {
             return;
         }
         
@@ -51,9 +52,8 @@ public class Ventana extends javax.swing.JFrame {
         int y = Integer.valueOf("" + btn.getName().charAt(1));
         tablero.set(x, y, marca);
         actualizarTablero(tablero);
-        System.out.println("Ha jugado el humano");
-        System.out.println(tablero.toString(1));
-        if (gameOver()){
+        if (partidaTerminada()){
+            inicializarJuego();
             return;
         }
         
@@ -63,23 +63,45 @@ public class Ventana extends javax.swing.JFrame {
         y = Integer.valueOf("" + s.charAt(1));
         botones[x][y].setEnabled(false);
         actualizarTablero(tablero);
-        System.out.println("Ha jugado la PC");
-        System.out.println(tablero.toString(1));
-        if (gameOver()){
+        if (partidaTerminada()){
+            inicializarJuego();
             return;
         }
     }
     
-    private boolean gameOver(){
-        // Mañana lo sigo, por ahora retorno false
-        return false;
+    private boolean partidaTerminada(){
+        boolean ret = true;
+        // 
+        if (tablero.getGanador() == Marca.VACIO){
+            if (tablero.estaLleno()){
+                // Empate
+                JOptionPane.showMessageDialog(this, "¡Empate!", "Partida terminada", JOptionPane.WARNING_MESSAGE);
+            }else{
+               // el juego sigue
+                ret = false;
+            }
+        }else if (tablero.getGanador() == marca){
+            // humano gana
+            JOptionPane.showMessageDialog(this, "¡Ganaste!", "Partida terminada", JOptionPane.WARNING_MESSAGE);
+        }else {
+            // humano pierde
+            JOptionPane.showMessageDialog(this, "¡Perdiste!", "Partida terminada", JOptionPane.WARNING_MESSAGE);
+        }
+        return ret;
     }
     
     private void inicializarJuego(){
+        pnlBotones.setEnabled(false);
         tablero = new Tablero();
         marca = Marca.X;
         jugadorVirtual = new JugadorVirtual(marca.getOpuesta(), false);
         actualizarTablero(tablero);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                botones[i][j].setEnabled(true);
+            }
+        }
+        pnlBotones.setEnabled(true);
     }
     
     private void actualizarTablero(Tablero t){
@@ -103,7 +125,7 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        pnlBotones = new javax.swing.JPanel();
         btn01 = new javax.swing.JButton();
         btn11 = new javax.swing.JButton();
         btn00 = new javax.swing.JButton();
@@ -118,7 +140,7 @@ public class Ventana extends javax.swing.JFrame {
         setTitle("Ta-Te-Ti");
         setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        pnlBotones.setBackground(new java.awt.Color(0, 0, 0));
 
         btn01.setFont(new java.awt.Font("Franklin Gothic Book", 1, 60)); // NOI18N
         btn01.setText("O");
@@ -183,45 +205,45 @@ public class Ventana extends javax.swing.JFrame {
         btn22.setName("22"); // NOI18N
         btn22.setPreferredSize(new java.awt.Dimension(100, 100));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnlBotonesLayout = new javax.swing.GroupLayout(pnlBotones);
+        pnlBotones.setLayout(pnlBotonesLayout);
+        pnlBotonesLayout.setHorizontalGroup(
+            pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBotonesLayout.createSequentialGroup()
+                .addGroup(pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn00, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlBotonesLayout.createSequentialGroup()
                         .addComponent(btn11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btn12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(pnlBotonesLayout.createSequentialGroup()
                         .addComponent(btn01, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btn02, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(pnlBotonesLayout.createSequentialGroup()
                 .addComponent(btn20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        pnlBotonesLayout.setVerticalGroup(
+            pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBotonesLayout.createSequentialGroup()
+                .addGroup(pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn00, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn01, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn02, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -233,14 +255,14 @@ public class Ventana extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -292,6 +314,6 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JButton btn20;
     private javax.swing.JButton btn21;
     private javax.swing.JButton btn22;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel pnlBotones;
     // End of variables declaration//GEN-END:variables
 }
